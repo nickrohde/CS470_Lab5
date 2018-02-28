@@ -14,6 +14,12 @@ int PCB::getPriority(void)
 } // end method getPriority
 
 
+int PCB::getSpot(void)
+{
+	return i_spot;
+}
+
+
 time_t PCB::getBurstTime(void)
 {
 	return t_burst;
@@ -74,10 +80,11 @@ State PCB::getState(void)
 } // end method getState
 
 
-PCB::PCB(int id, int priority, time_t burst, State state)
+PCB::PCB(int id, int priority, time_t burst, State state, int spot)
 {
 	i_ID = id;
 	i_priority = priority;
+	i_spot = spot;
 	t_burst = burst;
 	current_state = state;
 } // end Constructor
@@ -200,3 +207,4 @@ bool operator>(const PCB & lhs, const PCB & rhs)
 {
 	return lhs > rhs;
 } // end operator >
+

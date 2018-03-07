@@ -1,36 +1,78 @@
 #include <queue>
 #include <deque>
 #include <iostream>
+#include <vector>
+#include <functional>
+#include <algorithm>
+#include "PCB.h"
 
 
 #ifndef __QUEUES_
 #define __QUEUES_
 
-template<typename T, typename Container = std::deque<T> >
-class iterable_queue : public std::queue<T, Container>
+using namespace std;
+
+
+class MinHeap
 {
 public:
-	typedef typename Container::iterator iterator;
-	typedef typename Container::const_iterator const_iterator;
+	vector<PCB> heap;
+	bool sortByPriority;
+	
+	MinHeap(bool order) 
+	{
+		sortByPriority = order;
+	} // end constructor
 
-	iterator begin() { return this->c.begin(); }
-	iterator end() { return this->c.end(); }
-	const_iterator begin() const { return this->c.begin(); }
-	const_iterator end() const { return this->c.end(); }
-};
+	~MinHeap(void) {} // end destructor
+	
+	PCB& top(void)
+	{
+		if(!heap.empty())
+		{
+			PCB& temp(heap.at(heap.size()-1));
+			return temp;
+		} // end if
+		else
+		{
+			throw new invalid_argument("heap is empty");
+		} // end else
+	} // end method top
+	
+	void pop(void)
+	{
+		if(!heap.empty())
+		{
+			heap.pop_back();
+		} // end if
+	} // end method pop
 
-template<typename T, typename Container = std::vector<T>, typename Comparator = std::less<T> >
-class iterable_priority_queue : public std::priority_queue<T, Container, Comparator>
-{
-public:
-	typedef typename Container::iterator iterator;
-	typedef typename Container::const_iterator const_iterator;
+	void push(PCB& pcb)
+	{
+		heap.insert(heap.begin(), pcb);
+		if(sortByPriority)
+		{
+			std::sort(heap.begin(),heap.end(), std::greater<PCB>());
+		} // end if
+		else
+		{
+			std::sort(heap.begin(),heap.end(), CompareBySpot());
+		} // end else
+	} // end method push
+	
+	int size(void) const
+	{
+		return heap.size();
+	} // end method size
+	
+	bool empty(void)
+	{
+		return heap.empty();
+	} // end method empty
+}; // end class MinHeap
 
-	iterator begin() { return this->c.begin(); }
-	iterator end() { return this->c.end(); }
-	const_iterator begin() const { return this->c.begin(); }
-	const_iterator end() const { return this->c.end(); }
-};
+
+
 
 #endif // !__QUEUES_
 
